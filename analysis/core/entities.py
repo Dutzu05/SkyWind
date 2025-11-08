@@ -2,36 +2,36 @@ from typing import List,Optional
 import math
 
 class Point:
-    def _init_(self, lat: float, lon: float):
+    def __init__(self, lat: float, lon: float):
         self.lat = lat
         self.lon = lon
 
-    def _repr_(self):
+    def __repr__(self):
         return f"Point({self.lat}, {self.lon})"
 
 class Infrastructure:
-    def _init_(self, index: int=0, km_jud: int = 0, km_nat: int = 0, km_euro: int = 0, km_auto: int = 0):
+    def __init__(self, index: int=0, km_jud: int = 0, km_nat: int = 0, km_euro: int = 0, km_auto: int = 0):
         self.index = index
         self.km_jud = km_jud
         self.km_nat = km_nat
         self.km_euro = km_euro
         self.km_auto = km_auto
 
-    def _repr_(self):
+    def __repr__(self):
         return (f"Infrastructure(index={self.index}, km_jud={self.km_jud}, "
                 f"km_nat={self.km_nat}, km_euro={self.km_euro}, km_auto={self.km_auto})")
 
 
 class EnergyStorage:
-    def _init_(self, name: str, coordinates: Point):
+    def __init__(self, name: str, coordinates: Point):
         self.name = name
         self.coordinates = coordinates
 
-    def _repr_(self):
+    def __repr__(self):
         return f"EnergyStorage(name={self.name}, coordinates={self.coordinates})"
 
 class Zone:
-    def _init_(self,
+    def __init__(self,
                  A: Point,
                  B: Point,
                  C: Point,
@@ -59,11 +59,11 @@ class Zone:
         self.potential = potential
         self.infrastructure = infrastructure or Infrastructure()
 
-    def _repr_(self):
+    def __repr__(self):
         return f"{self.A}, {self.B}, {self.C}"
 
 class Region:
-    def _init_(self,
+    def __init__(self,
                  center: Point,
                  A: Point,
                  B: Point,
@@ -92,5 +92,5 @@ class Region:
         self.index_average = index_average
         self.zones: List[List[Zone]] = []
 
-    def _repr_(self):
-        return (f"{self.center}, {self.A}, {self.B}, {self.C}")
+    def __repr__(self):
+        return (f"{self.center}, {self.A}, {self.B}, {self.C}")
