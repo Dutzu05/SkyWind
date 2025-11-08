@@ -94,3 +94,52 @@ class Region:
 
     def __repr__(self):
         return (f"{self.center}, {self.A}, {self.B}, {self.C}")
+    
+    def generate_corners(self, side_km: float = 20.0):
+
+        half_km = side_km / 2
+
+        # Approximate degree conversions
+        deg_per_km_lat = 0.009  # 1 km ≈ 0.009° latitude
+        deg_per_km_lon = 0.009 / math.cos(math.radians(self.center.lat))
+
+        # Calculate deltas
+        delta_lon = half_km * deg_per_km_lon
+        delta_lat = half_km * deg_per_km_lat
+
+        # Clockwise from upper-right (A)
+        self.A = Point(self.center.lat + delta_lat, self.center.lon + delta_lon)  # upper-right
+        self.B = Point(self.center.lat - delta_lat, self.center.lon + delta_lon)  # lower-right
+        self.C = Point(self.center.lat - delta_lat, self.center.lon - delta_lon)  # lower-left
+        self.D = Point(self.center.lat + delta_lat, self.center.lon - delta_lon)  # upper-left
+
+        return self  # optional: allows chaining like region.generate_corners().generate_grid()
+    
+    def generate_grid(self, n: int = 10):
+
+        if not all([self.A, self.B, self.C, self.D]):
+            raise ValueError("Corners not generated. Call generate_corners() first.")
+
+        self.zones = []
+
+        # Step size between adjacent zones in degrees
+        step_lat = (self.B.lat - self.A.lat) / n     # north→south NEGATIVE
+        step_lon = (self.A.lon - self.D.lon) / n     # west→east POSITIVE
+
+        for i in range(n):
+            row = []
+            for j in range(n):
+                # Compute the top-left corner (D_zone) of this cell
+                top_left_lat = self.D.lat + i * step_lat
+                top_left_lon = self.D.lon + j * step_lon
+
+                # Now define all 4 corners clockwise starting from top-right (A)
+                A_zone = Point(top_left_lat, top_left_lon + step_lon)       # top-right
+                B_zone = Point(top_left_lat + step_lat, top_left_lon + step_lon)  # bottom-right
+                C_zone = Point(top_left_lat + step_lat, top_left_lon)       # bottom-left
+                D_zone = Point(top_left_lat, top_left_lon)                  # top-left
+
+                zone = Zone(A_zone, B_zone, C_zone, D_zone)
+                row.append(zone)
+
+            self.zones.append(row)
