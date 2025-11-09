@@ -65,10 +65,10 @@ class Zone:
 class Region:
     def __init__(self,
                  center: Point,
-                 A: Point,
-                 B: Point,
-                 C: Point,
-                 D: Point,
+                 A: Optional[Point]=None,
+                 B: Optional[Point]=None,
+                 C: Optional[Point]=None,
+                 D: Optional[Point]=None,
                  avg_temperature: float = 0.0,
                  wind_rose: Optional[List[float]] = None,
                  rating: int = 0,
@@ -124,7 +124,7 @@ class Region:
 
         # Step size between adjacent zones in degrees
         step_lat = (self.B.lat - self.A.lat) / n     # north→south NEGATIVE
-        step_lon = (self.A.lon - self.D.lon) / n     # west→east POSITIVE
+        step_lon = (self.A.lon - self.D.lon) / n       # west→east POSITIVE
 
         for i in range(n):
             row = []
@@ -143,3 +143,60 @@ class Region:
                 row.append(zone)
 
             self.zones.append(row)
+
+def region_to_geojson(region: Region) -> dict:
+    features = []
+
+    #The main polygon
+    features.append({
+        "type": "Feature",
+        "properties":{"name": "Region Polygon"},
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [[
+                [region.A.lon, region.A.lat],
+                [region.B.lon, region.B.lat],
+                [region.C.lon, region.C.lat],
+                [region.D.lon, region.D.lat],
+                [region.A.lon, region.A.lat],
+            ]]
+        }
+
+    })
+
+    #The center point
+
+    features.append({
+        "type": "Feature",
+        "properties": {"name": "center point"},
+        "geometry": {
+            "type": "Point",
+            "coordinates": [region.center.lon, region.center.lat]
+        }
+
+    })
+
+    for label, p in zip(["A", "B", "C", "D"], [region.A, region.B, region.C, region.D]):
+        features.append({
+            "type": "Feature",
+            "properties": {"name": f"Point {label}"},
+            "geometry": {"type": "Point", "coordinates": [p.lon, p.lat]}
+        })
+
+    for i, row in enumerate(region.zones, start = 1):
+        for j, z in enumerate(row, start = 1):
+            features.append({
+                "type": "Feature",
+                "properties": {"name": f"Zone[{i},{j}]"},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [[
+                        [z.A.lon, z.A.lat],
+                        [z.B.lon, z.B.lat],
+                        [z.C.lon, z.C.lat],
+                        [z.D.lon, z.D.lat],
+                        [z.A.lon, z.A.lat],
+                    ]]
+                }
+            })
+    return {"type": "FeatureCollection", "features": features}
