@@ -1,6 +1,8 @@
 # Use official Python image
 FROM python:3.14-slim
 
+RUN apt-get update && apt-get install -y postgresql-client
+
 # Set working directory
 WORKDIR /app
 

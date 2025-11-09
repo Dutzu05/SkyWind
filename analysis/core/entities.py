@@ -70,9 +70,9 @@ class Region:
                  C: Optional[Point]=None,
                  D: Optional[Point]=None,
                  avg_temperature: float = 0.0,
-                 wind_rose: Optional[List[float]] = None,
+                 wind_rose: Optional[List[float]] = None,#
                  rating: int = 0,
-                 max_potential: Optional[Zone] = None,
+                 max_potential: Optional[Zone] = None,#
                  avg_potential: float = 0.0,
                  closest_storage: Optional[EnergyStorage] = None,
                  infrastructure_rating: int = 0,
