@@ -75,8 +75,9 @@ class Zone(models.Model):
     power_avg = models.FloatField(default=0.0)
     land_type = models.CharField(max_length=50, blank=True)
     potential = models.FloatField(default=0.0)
+    zone_index = models.IntegerField(default=0)
 
-    infrastructure = models.OneToOneField(Infrastructure, on_delete=models.CASCADE)
+    infrastructure = models.ForeignKey(Infrastructure, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Zone of Region {self.region.id}"

@@ -44,6 +44,7 @@ class Zone:
                  power_avg: float = 0.0,
                  land_type: str = "",
                  potential: float = 0.0,
+
                  infrastructure: Optional[Infrastructure] = None):
         self.A = A
         self.B = B
@@ -76,6 +77,7 @@ class Region:
                  avg_potential: float = 0.0,
                  closest_storage: Optional[EnergyStorage] = None,
                  infrastructure_rating: int = 0,
+                 zone_index: int = 0,
                  index_average: float = 0.0):
         self.center = center
         self.A = A
@@ -91,6 +93,7 @@ class Region:
         self.infrastructure_rating = infrastructure_rating
         self.index_average = index_average
         self.zones: List[List[Zone]] = []
+        self.zone_index = zone_index
 
     def __repr__(self):
         return (f"{self.center}, {self.A}, {self.B}, {self.C}")

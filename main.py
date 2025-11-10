@@ -4,7 +4,7 @@ from analysis.core.entities import Point, Region, region_to_geojson
 
 region = Region(center = Point(46.7712, 23.6236))
 region.generate_corners(side_km=20)
-region.generate_grid(n=40)
+region.generate_grid(n=5)
 geojson_data = region_to_geojson(region)
 
 #save
