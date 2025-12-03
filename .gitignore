@@ -3,6 +3,10 @@
 # -------------------------
 *.zip
 
+#Prevent tracking
+
+SkyWind/.config/earthengine/
+
 # -------------------------
 # Node modules and build outputs
 # -------------------------
